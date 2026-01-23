@@ -11,43 +11,49 @@
     >
       <div class="slider-track" :class="{ 'is-dragging': isDragging }" :style="trackStyle">
         <div
-          v-for="(video, index) in videos"
-          :key="index"
+          v-for="(slide, index) in slides"
+          :key="slide.key"
           class="slide"
+          :class="{ 'slide--cta': slide.isCta }"
         >
-          <video
-            ref="videoEls"
-            class="slide-video"
-            :src="video.url"
-            :poster="video.poster || null"
-            :muted="content.autoPlayMuted"
-            playsinline
-            loop
-            preload="metadata"
-            :controls="content.showControls"
-          ></video>
-          <div v-if="video.caption" class="caption">{{ video.caption }}</div>
+          <template v-if="slide.isCta">
+            <button class="cta-button" type="button">Decouvrir</button>
+          </template>
+          <template v-else>
+            <video
+              ref="videoEls"
+              class="slide-video"
+              :src="slide.url"
+              :poster="slide.poster || null"
+              :muted="content.autoPlayMuted"
+              playsinline
+              loop
+              preload="metadata"
+              :controls="content.showControls"
+            ></video>
+            <div v-if="slide.caption" class="caption">{{ slide.caption }}</div>
+          </template>
         </div>
       </div>
     </div>
-    <div class="slider-controls" v-if="videos.length > 1">
+    <div class="slider-controls" v-if="slideCount > 1">
       <button class="nav-button" @click="prev" :disabled="currentIndex === 0">
         Prev
       </button>
       <div class="dots" v-if="content.showDots">
         <button
-          v-for="(video, index) in videos"
-          :key="`dot-${index}`"
+          v-for="(slide, index) in slides"
+          :key="`dot-${slide.key}`"
           class="dot"
           :class="{ active: index === currentIndex }"
           @click="goTo(index)"
-          :aria-label="`Go to video ${index + 1}`"
+          :aria-label="`Go to slide ${index + 1}`"
         ></button>
       </div>
       <button
         class="nav-button"
         @click="next"
-        :disabled="currentIndex === videos.length - 1"
+        :disabled="currentIndex === slideCount - 1"
       >
         Next
       </button>
@@ -77,6 +83,19 @@ export default {
     videos() {
       return Array.isArray(this.content.videos) ? this.content.videos : [];
     },
+    slides() {
+      if (!this.videos.length) return [];
+      const items = this.videos.map((video, index) => ({
+        ...video,
+        isCta: false,
+        key: `video-${index}`,
+      }));
+      items.push({ isCta: true, key: "cta" });
+      return items;
+    },
+    slideCount() {
+      return this.slides.length;
+    },
     trackStyle() {
       return {
         transform: `translateY(calc(-${this.currentIndex * 100}% + ${this.dragOffset}px))`,
@@ -87,8 +106,8 @@ export default {
     videos: {
       immediate: true,
       handler() {
-        if (this.currentIndex >= this.videos.length) {
-          this.currentIndex = Math.max(this.videos.length - 1, 0);
+        if (this.currentIndex >= this.slideCount) {
+          this.currentIndex = Math.max(this.slideCount - 1, 0);
         }
         this.$nextTick(() => this.setupObserver());
       },
@@ -108,13 +127,13 @@ export default {
       this.currentIndex = Math.max(this.currentIndex - 1, 0);
     },
     next() {
-      this.currentIndex = Math.min(this.currentIndex + 1, this.videos.length - 1);
+      this.currentIndex = Math.min(this.currentIndex + 1, this.slideCount - 1);
     },
     goTo(index) {
       this.currentIndex = index;
     },
     onPointerDown(event) {
-      if (!this.videos.length || this.videos.length === 1) return;
+      if (!this.slideCount || this.slideCount === 1) return;
       if (event.button !== undefined && event.button !== 0) return;
       this.isDragging = true;
       this.dragStartY = event.clientY;
@@ -129,7 +148,7 @@ export default {
       const delta = event.clientY - this.dragStartY;
       const viewportHeight = this.$refs.viewport ? this.$refs.viewport.clientHeight : 0;
       const isFirst = this.currentIndex === 0;
-      const isLast = this.currentIndex === this.videos.length - 1;
+      const isLast = this.currentIndex === this.slideCount - 1;
       let nextOffset = delta;
       if ((isFirst && delta > 0) || (isLast && delta < 0)) {
         nextOffset = delta * 0.35;
@@ -248,6 +267,11 @@ export default {
   display: grid;
 }
 
+.slide--cta {
+  background: #101116;
+  place-items: center;
+}
+
 .slide-video {
   width: 100%;
   height: 100%;
@@ -265,6 +289,24 @@ export default {
   color: #ffffff;
   font-size: 14px;
   letter-spacing: 0.02em;
+}
+
+.cta-button {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 28px;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #101116;
+  background: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(16, 17, 22, 0.35);
 }
 
 .slider-controls {
