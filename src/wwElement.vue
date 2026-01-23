@@ -67,7 +67,7 @@ export default {
     },
     trackStyle() {
       return {
-        transform: `translateX(-${this.currentIndex * 100}%)`,
+        transform: `translateY(-${this.currentIndex * 100}%)`,
       };
     },
   },
@@ -168,23 +168,27 @@ export default {
   overflow: hidden;
   border-radius: 16px;
   background: #0c1027;
+  height: clamp(220px, 55vw, 520px);
 }
 
 .slider-track {
   display: flex;
   width: 100%;
   transition: transform 0.5s ease;
+  flex-direction: column;
+  height: 100%;
 }
 
 .slide {
-  min-width: 100%;
+  flex: 0 0 100%;
+  height: 100%;
   position: relative;
   display: grid;
 }
 
 .slide-video {
   width: 100%;
-  height: clamp(220px, 55vw, 520px);
+  height: 100%;
   object-fit: cover;
   display: block;
 }
