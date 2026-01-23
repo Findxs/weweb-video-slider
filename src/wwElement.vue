@@ -1,7 +1,15 @@
 <template>
   <div class="video-slider" :class="{ 'is-empty': !videos.length }">
-    <div class="slider-viewport" ref="viewport">
-      <div class="slider-track" :style="trackStyle">
+    <div
+      class="slider-viewport"
+      ref="viewport"
+      @pointerdown="onPointerDown"
+      @pointermove="onPointerMove"
+      @pointerup="onPointerUp"
+      @pointercancel="onPointerUp"
+      @pointerleave="onPointerUp"
+    >
+      <div class="slider-track" :class="{ 'is-dragging': isDragging }" :style="trackStyle">
         <div
           v-for="(video, index) in videos"
           :key="index"
@@ -59,6 +67,10 @@ export default {
     return {
       currentIndex: 0,
       observer: null,
+      isDragging: false,
+      dragStartY: 0,
+      dragOffset: 0,
+      activePointerId: null,
     };
   },
   computed: {
@@ -67,7 +79,7 @@ export default {
     },
     trackStyle() {
       return {
-        transform: `translateY(-${this.currentIndex * 100}%)`,
+        transform: `translateY(calc(-${this.currentIndex * 100}% + ${this.dragOffset}px))`,
       };
     },
   },
@@ -100,6 +112,47 @@ export default {
     },
     goTo(index) {
       this.currentIndex = index;
+    },
+    onPointerDown(event) {
+      if (!this.videos.length || this.videos.length === 1) return;
+      if (event.button !== undefined && event.button !== 0) return;
+      this.isDragging = true;
+      this.dragStartY = event.clientY;
+      this.dragOffset = 0;
+      this.activePointerId = event.pointerId;
+      if (event.currentTarget && event.currentTarget.setPointerCapture) {
+        event.currentTarget.setPointerCapture(event.pointerId);
+      }
+    },
+    onPointerMove(event) {
+      if (!this.isDragging || event.pointerId !== this.activePointerId) return;
+      const delta = event.clientY - this.dragStartY;
+      const viewportHeight = this.$refs.viewport ? this.$refs.viewport.clientHeight : 0;
+      const isFirst = this.currentIndex === 0;
+      const isLast = this.currentIndex === this.videos.length - 1;
+      let nextOffset = delta;
+      if ((isFirst && delta > 0) || (isLast && delta < 0)) {
+        nextOffset = delta * 0.35;
+      }
+      if (viewportHeight) {
+        const maxOffset = viewportHeight * 0.9;
+        nextOffset = Math.max(Math.min(nextOffset, maxOffset), -maxOffset);
+      }
+      this.dragOffset = nextOffset;
+    },
+    onPointerUp(event) {
+      if (!this.isDragging || event.pointerId !== this.activePointerId) return;
+      const delta = this.dragOffset;
+      const viewportHeight = this.$refs.viewport ? this.$refs.viewport.clientHeight : 0;
+      const threshold = viewportHeight ? viewportHeight * 0.2 : 40;
+      if (delta <= -threshold) {
+        this.next();
+      } else if (delta >= threshold) {
+        this.prev();
+      }
+      this.isDragging = false;
+      this.dragOffset = 0;
+      this.activePointerId = null;
     },
     setupObserver() {
       this.destroyObserver();
@@ -169,6 +222,7 @@ export default {
   border-radius: 16px;
   background: #0c1027;
   height: clamp(220px, 55vw, 520px);
+  touch-action: pan-x;
 }
 
 .slider-track {
@@ -177,6 +231,10 @@ export default {
   transition: transform 0.5s ease;
   flex-direction: column;
   height: 100%;
+}
+
+.slider-track.is-dragging {
+  transition: none;
 }
 
 .slide {
