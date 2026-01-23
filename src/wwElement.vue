@@ -17,7 +17,10 @@
           :class="{ 'slide--cta': slide.isCta }"
         >
           <template v-if="slide.isCta">
-            <button class="cta-button" type="button" @click="goToInstructions">Suivant</button>
+            <a
+              class="cta-button"
+              href="https://04ba7c30-a628-4068-8df8-ad11e88e9ff3.weweb-preview.io/instructions/"
+            >Suivant</a>
           </template>
           <template v-else>
             <video
@@ -123,10 +126,6 @@ export default {
     this.destroyObserver();
   },
   methods: {
-    goToInstructions() {
-      window.location.href =
-        "https://04ba7c30-a628-4068-8df8-ad11e88e9ff3.weweb-preview.io/instructions/";
-    },
     prev() {
       this.currentIndex = Math.max(this.currentIndex - 1, 0);
     },
