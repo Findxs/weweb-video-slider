@@ -12,16 +12,19 @@ export default {
       type: "Array",
       defaultValue: [
         {
-          url: "https://weweb-production.s3.amazonaws.com/designs/04ba7c30-a628-4068-8df8-ad11e88e9ff3/files/course_2_smartphone.mov",
-          poster:
-            "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217",
-          caption: "Big Buck Bunny",
+          url: "https://weweb-production.s3.amazonaws.com/designs/7bbcc9e0-1226-4553-bc79-e03ef78066b4/files/course_1_smartphone.mov",
+          poster:"",
+          caption: "",
         },
         {
-          url: "https://weweb-production.s3.amazonaws.com/designs/04ba7c30-a628-4068-8df8-ad11e88e9ff3/files/course_2_smartphone.mov",
-          poster:
-            "https://upload.wikimedia.org/wikipedia/commons/9/90/Elephants_Dream_s5_both.jpg",
-          caption: "Elephants Dream",
+          url: "https://weweb-production.s3.amazonaws.com/designs/7bbcc9e0-1226-4553-bc79-e03ef78066b4/files/course_2_smartphone.mov",
+          poster:"",
+          caption: ""
+        },
+        {
+          url: "https://weweb-production.s3.amazonaws.com/designs/7bbcc9e0-1226-4553-bc79-e03ef78066b4/files/course_3_smartphone.mov",
+          poster:"",
+          caption: "",
         },
       ],
       element: {
