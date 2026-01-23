@@ -214,6 +214,8 @@ export default {
   background: linear-gradient(135deg, #f4f6ff 0%, #fef4ec 100%);
   border: 1px solid rgba(12, 16, 39, 0.08);
   box-shadow: 0 18px 40px rgba(12, 16, 39, 0.12);
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .slider-viewport {
@@ -223,7 +225,7 @@ export default {
   background: #0c1027;
   width: 100%;
   aspect-ratio: 9 / 16;
-  max-height: clamp(220px, 55vw, 520px);
+  height: 100%;
   touch-action: pan-x;
 }
 
