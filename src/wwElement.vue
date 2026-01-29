@@ -17,6 +17,11 @@
           :class="{ 'slide--cta': slide.isCta }"
         >
           <template v-if="slide.isCta">
+            <img
+              class="cta-mascot"
+              src="https://cdn.weweb.io/designs/7bbcc9e0-1226-4553-bc79-e03ef78066b4/sections/mascot-eagle.png?_wwcv=1768993575611"
+              alt="Mascotte aigle"
+            />
             <a
               class="cta-button"
               href="http://7bbcc9e0-1226-4553-bc79-e03ef78066b4.weweb-preview.io/instructions/"
@@ -273,6 +278,7 @@ export default {
 .slide--cta {
   background: #101116;
   place-items: center;
+  gap: 16px;
 }
 
 .slide-video {
@@ -310,6 +316,12 @@ export default {
 .cta-button:hover {
   transform: translateY(-1px);
   box-shadow: 0 8px 20px rgba(16, 17, 22, 0.35);
+}
+
+.cta-mascot {
+  width: min(160px, 60%);
+  height: auto;
+  display: block;
 }
 
 .slider-controls {
