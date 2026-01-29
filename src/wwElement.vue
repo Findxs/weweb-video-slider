@@ -17,20 +17,22 @@
           :class="{ 'slide--cta': slide.isCta }"
         >
           <template v-if="slide.isCta">
-            <img
-              class="cta-mascot"
-              src="https://cdn.weweb.io/designs/7bbcc9e0-1226-4553-bc79-e03ef78066b4/sections/mascot-eagle.png?_wwcv=1768993575611"
-              alt="Mascotte aigle"
-            />
-            <p class="cta-text">
-              Super ! ⏱️ Tu as quelques minutes pour revoir tes notes avant de passer à la suite du module.
-              Tu vas maintenant t’entraîner avec un scénario réaliste pour te présenter face à un recruteur. 🎯
-              Choisis ta méthode et lance-toi ! 🚀
-            </p>
-            <a
-              class="cta-button"
-              href="http://7bbcc9e0-1226-4553-bc79-e03ef78066b4.weweb-preview.io/instructions/"
-            >Suivant</a>
+            <div class="cta-stack">
+              <img
+                class="cta-mascot"
+                src="https://cdn.weweb.io/designs/7bbcc9e0-1226-4553-bc79-e03ef78066b4/sections/mascot-eagle.png?_wwcv=1768993575611"
+                alt="Mascotte aigle"
+              />
+              <p class="cta-text">
+                Super ! ⏱️ Tu as quelques minutes pour revoir tes notes avant de passer à la suite du module.
+                Tu vas maintenant t’entraîner avec un scénario réaliste pour te présenter face à un recruteur. 🎯
+                Choisis ta méthode et lance-toi ! 🚀
+              </p>
+              <a
+                class="cta-button"
+                href="http://7bbcc9e0-1226-4553-bc79-e03ef78066b4.weweb-preview.io/instructions/"
+              >Suivant</a>
+            </div>
           </template>
           <template v-else>
             <video
@@ -282,8 +284,9 @@ export default {
 
 .slide--cta {
   background: #101116;
-  place-items: center;
-  gap: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .slide-video {
@@ -324,9 +327,16 @@ export default {
 }
 
 .cta-mascot {
-  width: min(160px, 60%);
+  width: min(80%);
   height: auto;
   display: block;
+}
+
+.cta-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
 .cta-text {
@@ -339,7 +349,6 @@ export default {
   padding: 12px 16px;
   font-size: 15px;
   line-height: 1.5;
-  font-family: "Sora", sans-serif;
 }
 
 .slider-controls {
