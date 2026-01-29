@@ -283,7 +283,7 @@ export default {
 .slide--cta {
   background: #101116;
   place-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .slide-video {
@@ -331,10 +331,13 @@ export default {
 
 .cta-text {
   margin: 0;
-  max-width: 320px;
+  max-width: 340px;
   text-align: center;
-  color: #f7f7fb;
-  font-size: 14px;
+  color: #101116;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 12px 16px;
+  font-size: 15px;
   line-height: 1.5;
 }
 
