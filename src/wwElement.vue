@@ -100,6 +100,7 @@ export default {
     },
     slides() {
       if (!this.videos.length) return [];
+      // Append a CTA slide after the user-provided videos.
       const items = this.videos.map((video, index) => ({
         ...video,
         isCta: false,
@@ -121,6 +122,7 @@ export default {
     videos: {
       immediate: true,
       handler() {
+        // Keep the current index valid after edits in the editor.
         if (this.currentIndex >= this.slideCount) {
           this.currentIndex = Math.max(this.slideCount - 1, 0);
         }
@@ -128,6 +130,7 @@ export default {
       },
     },
     currentIndex() {
+      // Stop non-visible videos
       this.$nextTick(() => this.pauseOffscreenVideos());
     },
   },
@@ -165,10 +168,12 @@ export default {
       const isFirst = this.currentIndex === 0;
       const isLast = this.currentIndex === this.slideCount - 1;
       let nextOffset = delta;
+      // Add resistance when dragging past the ends.
       if ((isFirst && delta > 0) || (isLast && delta < 0)) {
         nextOffset = delta * 0.35;
       }
       if (viewportHeight) {
+        // Clamp drag distance to avoid huge offsets on large screens.
         const maxOffset = viewportHeight * 0.9;
         nextOffset = Math.max(Math.min(nextOffset, maxOffset), -maxOffset);
       }
@@ -178,6 +183,7 @@ export default {
       if (!this.isDragging || event.pointerId !== this.activePointerId) return;
       const delta = this.dragOffset;
       const viewportHeight = this.$refs.viewport ? this.$refs.viewport.clientHeight : 0;
+      // Require a minimum swipe distance before changing slides.
       const threshold = viewportHeight ? viewportHeight * 0.2 : 40;
       if (delta <= -threshold) {
         this.next();
@@ -197,6 +203,7 @@ export default {
         threshold: 0.6,
       };
 
+      // Autoplay/pause videos based on visibility inside the viewport.
       this.observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           const video = entry.target;
@@ -219,6 +226,7 @@ export default {
     safePlay(video) {
       if (!video) return;
       const promise = video.play();
+      // Ignore autoplay rejections (browser policy).
       if (promise && typeof promise.catch === "function") {
         promise.catch(() => {});
       }
@@ -229,6 +237,7 @@ export default {
     },
     pauseOffscreenVideos() {
       if (!this.$refs.videoEls) return;
+      // Ensure only the active slide can be playing.
       this.$refs.videoEls.forEach((video, index) => {
         if (index !== this.currentIndex) {
           this.safePause(video);

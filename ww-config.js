@@ -11,6 +11,7 @@ export default {
       },
       type: "Array",
       defaultValue: [
+        //Links from the weweb CDN (replace with local link if auto-hosted)
         {
           url: "https://weweb-production.s3.amazonaws.com/designs/7bbcc9e0-1226-4553-bc79-e03ef78066b4/files/course_1_smartphone.mov",
           poster:"",
